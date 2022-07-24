@@ -10,22 +10,21 @@ import machine
 pin = machine.Pin(2)  #blinking is optional, check your LED pin
 
 #Place these Certs at same folder level as your MicroPython program
-#no need to alter your AWS Client Cert and Private Key
-CERT_FILE = "/certificate.pem.crt"  #the ".crt" may be hidden that’s ok
+#No need to alter your AWS Client Cert and Private Key
+CERT_FILE = "/certificate.pem.crt"  
 KEY_FILE = "/private.pem.key"
 
-#If you change the ClientId make sure update AWS policy
 MQTT_CLIENT_ID = "CurtesyFlush88"
 MQTT_PORT = 8883 #MQTT secured
-#if you change the topic make sure update AWS policy
+
 PUB_TOPIC = "iot/outTopic" #coming out of device
 SUB_TOPIC = "iot/inTopic"  #coming into device
 
-#Change the following three settings to match your environment
-#IoT Core-->Settings or > aws iot describe-endpoint --endpoint-type iot:Data-ATS
-MQTT_HOST = "a32qaa131oyees-ats.iot.us-east-1.amazonaws.com"  #Your AWS IoT endpoint
-WIFI_SSID = "iPhone"
-WIFI_PW = "burger888"
+#Your AWS IoT Endpoint found at IoT Core-->Settings
+#Change the following three settings
+MQTT_HOST = "<YOUR-AWS-IOT-ENDPOINT>" #Your AWS IoT endpoint
+WIFI_SSID = "<Your-WiFi-Network-Name-Here>"
+WIFI_PW = "<Your-WiFi-Password>"
 
 MQTT_CLIENT = None
 
@@ -42,7 +41,6 @@ def network_connect():
         while not sta_if.isconnected():
             pass
     print('network config:', sta_if.ifconfig())
-
     
 def pub_msg(msg):  #publish is synchronous so we poll and publish
     global MQTT_CLIENT
@@ -61,14 +59,14 @@ def sub_cb(topic, msg):
 def cloud_connect():    
     global MQTT_CLIENT
 
-    try:  #all this below runs once, equivalent to Arduino's "setup" function)
+    try:  #Security certs
         with open(KEY_FILE, "r") as f: 
             key = f.read()
-        print("Got Key")
+        print("Got Private Key")
        
         with open(CERT_FILE, "r") as f: 
             cert = f.read()
-        print("Got Cert")
+        print("Got Client/Device Cert")
 
         MQTT_CLIENT = MQTTClient(client_id=MQTT_CLIENT_ID, server=MQTT_HOST, port=MQTT_PORT, keepalive=5000, ssl=True, ssl_params={"cert":cert, "key":key, "server_side":False})
         MQTT_CLIENT.connect()
@@ -81,7 +79,7 @@ def cloud_connect():
         print('Cannot connect MQTT: ' + str(e))
         raise
 
-#start execution
+#Start execution
 try:
     print("Connecting WiFi netowrk")
     network_connect()
@@ -89,7 +87,7 @@ try:
     cloud_connect()
     while True: #loop forever
             pin.value(1)
-            pending_message = MQTT_CLIENT.check_msg()  # check for new subscription payload incoming
+            pending_message = MQTT_CLIENT.check_msg()  # check for new sub payload incoming
             if pending_message != 'None':  #check if we have a message 
                 temp =  random.randint(0, 130)
                 humid = random.randint(0, 100)
@@ -100,4 +98,4 @@ try:
                 time.sleep(5)  #A 5 second delay between publishing, adjust as you like
             
 except Exception as e:
-    print(str(e)) 
+    print(str(e))
