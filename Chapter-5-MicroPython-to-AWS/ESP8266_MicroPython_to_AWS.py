@@ -12,8 +12,8 @@ pin = machine.Pin(2)
 
 #Convert your AWS Certs with OpenSSL:  directions in the header of this code
 #Open.SSL can be found with default install  in--> C:\Program Files\Git\usr\bin>
-CERT_FILE = "/cert33.cert.der"
-KEY_FILE = "/private33.key.der"
+CERT_FILE = "/<Your-Client-Cert>.cert.der"
+KEY_FILE = "/<Your-Private-Key>.key.der"
 
 #Client_ID should be unique per device
 MQTT_CLIENT_ID = "HeavyPetter33"
@@ -25,9 +25,9 @@ SUB_TOPIC = "iot/inTopic"  #coming into device
 
 #Change the following three settings to match your environment
 #IoT Core-->Settings or > aws iot describe-endpoint --endpoint-type iot:Data-ATS
-MQTT_HOST = "a32qaa131oyees-ats.iot.us-west-2.amazonaws.com"  #Your AWS IoT Endpoint
-WIFI_SSID = "iPhone"
-WIFI_PW = "burger888"
+MQTT_HOST = "<Your-AWS-IoT-Endpoint>"  
+WIFI_SSID = "<Your-WiFI-Network>"
+WIFI_PW = "<Your-WiFI-Password>"
 
 MQTT_CLIENT = None  #empty object
 
