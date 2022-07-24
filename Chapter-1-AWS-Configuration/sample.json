@@ -1,0 +1,40 @@
+[
+  {
+		"temperature": 33,
+		"humidity": 24,
+		"timestamps": 12345
+	},
+	{
+		"temperature": 43,
+		"humidity": 34,
+		"timestamps": 12356
+
+	},
+	{
+		"temperature": 53,
+		"humidity": 44,
+		"timestamps": 12366
+	},
+	{
+		"temperature": 63,
+		"humidity": 54,
+		"timestamps": 12377
+
+	},
+	{
+		"temperature": 73,
+		"humidity": 64,
+		"timestamps": 12388
+	},
+	{
+		"temperature": 83,
+		"humidity": 74,
+		"timestamps": 12399
+
+	},
+	{
+		"temperature": 93,
+		"humidity": 84,
+		"timestamps": 12411
+	}
+]
