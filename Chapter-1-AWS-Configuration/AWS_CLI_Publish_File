@@ -1,0 +1,1 @@
+aws iot-data publish --topic "outTopic" --cli-binary-format raw-in-base64-out --payload file://sample.json
