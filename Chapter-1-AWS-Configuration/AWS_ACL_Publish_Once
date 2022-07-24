@@ -1,0 +1,1 @@
+aws --region us-east-1 iot-data publish --topic "outTopic" --cli-binary-format raw-in-base64-out --payload "{\"uptime\": 123,\"temp\": 55,\"humidity\": 77}"
