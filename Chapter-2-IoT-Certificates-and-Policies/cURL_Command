@@ -1,0 +1,7 @@
+  curl --tlsv1.2 ^
+  --cacert Amazon-root-CA-1.pem ^
+  --cert client.pem.crt ^
+  --key private.pem.key ^
+  --request POST ^
+  --data "{\"Temperature\": 77, \"Humidity\": 88, \"Time\": 12349876}" ^
+  "https://<INSERT-YOUR-IOT-DATA-ENDPOINT-HERE>:8443/topics/outTopic?qos=1"
