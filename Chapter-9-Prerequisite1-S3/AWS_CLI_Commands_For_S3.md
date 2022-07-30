@@ -24,7 +24,6 @@ To create a bucket in another (non-home) region:
 
 ```
 aws s3api create-bucket --bucket <Your-Bucket-Name> --region <AWS-Region> --create-bucket-configuration LocationConstraint=<AWS-Region> --acl public-read
-
 ```
  
  Here I create a bucket called “testbucket520cli” in us-west-2
