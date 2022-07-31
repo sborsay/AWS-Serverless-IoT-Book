@@ -15,13 +15,16 @@ $.ajax({
             url = keys[i].childNodes[0].nodeValue
             url = url.trim()+"+"
 
-            // Find your locate folder string 
+            /*May not be needed as of 8/1/2022
+             Find your locate folder string */
+            
            // pos = url.search("iot/test/");
-          //  if(pos > -1) {
-                // Detect folder/partition with json file
-             //   if(url.replace("iot/test/", "") != "")
-             //       parseJson(url)
-            //}
+           //  if(pos > -1) {
+           // Detect folder/partition with json file
+           //   if(url.replace("iot/test/", "") != "")
+           //       parseJson(url)
+           //}
+            
         }
 
         loadChart(temperature, humidity, timestamps)
