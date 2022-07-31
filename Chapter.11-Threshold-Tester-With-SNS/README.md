@@ -1,1 +1,1 @@
-IoT Core with Threshold testing and topic republishing and SNS
+AWS IoT Core with Threshold testing and topic republishing and SNS
