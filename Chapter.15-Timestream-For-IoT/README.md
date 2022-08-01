@@ -1,3 +1,3 @@
 ## Timestream for IoT
 
-### IoT-->Timestrem<--Lambda function<--Function URL Endpoint<--Static Web Host Visualization
+### IoT-->Timestream<--Lambda Query function<--Function URL Endpoint<--Static Web Host Visualization
