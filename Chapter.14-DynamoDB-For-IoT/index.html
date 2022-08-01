@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+
+  <div class="container">
+
+    <div class="row">
+        <div class="col-sm-6"><h1>Dashboard</h1></div>
+        <div class="col-sm-6" style="margin-top: 25px">
+            <button id="fetch" class="btn btn-primary">Fetch</button>
+            <span id="indicator" style="display: none;">Fetching...</span>
+        </div>
+      </div>
+    
+    
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <strong>Line Chart</strong>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div id="container1"></div>
+      </div>
+    </div>
+
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <strong>Bar Chart</strong>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div id="container"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    window.onload = function exampleFunction() {
+
+      document.getElementById('fetch').addEventListener('click', fetchS3Data)
+
+      function fetchS3Data() {
+        document.getElementById('indicator').style.display = 'inline';
+        var x = new XMLHttpRequest();
+
+        // API Gateway  //Example: https://3frg13.execute-api.us-east-1.amazonaws.com/prod"
+        x.open("GET","https://<YOUR-API-GATEWAY-ENDPOINT-HERE>",  true); 
+        ///----------------------////
+        x.onreadystatechange = function () {
+          if (x.readyState == 4 && x.status == 200) {
+            let abcData = JSON.parse(x.responseText)
+            // sort data based on timestamps
+            abcData = abcData.sort((a,b) => a.timestamps - b.timestamps);
+            let barGraphXaxisName = ['Humidity', 'Temperature'];
+            let humiditySum = 0, temperatureSum = 0, timestampsSum = 0;
+            let lineXaxisData = [], humArr = [], tempArr = [], tsArr = [];
+            for (let i = 0; i < abcData.length; i++) {
+              (humiditySum += Number(abcData[i].humidity)/abcData.length);  
+              (temperatureSum += Number(abcData[i].temperature)/abcData.length);
+
+              var timestamp = Number(abcData[i].timestamps)
+              var date = new Date(timestamp);
+              console.log(date.getTime())
+              console.log(date)
+
+             humArr.push(Number(abcData[i].humidity));  //humidity on Y-Axis
+             tempArr.push(Number(abcData[i].temperature)); //temperature on Y-Axis
+            // tsArr.push(Number(abcData[i].timestamps));  //Timestamps on X-Axis
+             tsArr.push(date);  //date on X-Axis
+
+            }
+
+            // round number upto 2 decimal number
+            humiditySum = Math.round(humiditySum * 100) / 100;
+            temperatureSum = Math.round(temperatureSum* 100) / 100;
+
+            Highcharts.chart('container', {
+              chart: {
+                type: 'column'
+              },
+
+              title: {
+                text: 'Bar Chart'
+              },
+              xAxis: {
+                categories: barGraphXaxisName
+              },
+
+              yAxis: {
+                title: {
+                  text: 'Value'
+                }
+              },
+              tooltip: {
+    formatter: function() {
+        return this.x + ' average ' + this.y;
+    }
+},
+              series: [{
+                data: [humiditySum, temperatureSum],
+                name: "Temperature and Humidity Averages"
+              }],
+
+              responsive: {
+                rules: [{
+                  condition: {
+                    maxWidth: 500
+                  },
+                  chartOptions: {
+                    chart: {
+                      className: 'small-chart'
+                    }
+                  }
+                }]
+              }
+            });
+
+
+            Highcharts.chart('container1', {
+
+              title: {
+                text: 'Line chart'
+              },
+
+              yAxis: {
+                title: {
+                  text: 'Value'
+                }
+              },
+
+              xAxis: {
+                categories: tsArr
+              },
+
+              legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+              },
+
+              plotOptions: {
+                series: {
+                  label: {
+                    connectorAllowed: false
+                  }
+                }
+              },
+              series: [{
+                name: 'Humdity',
+                data: humArr
+              }, {
+                name: 'Temperature',
+                data: tempArr
+              }],
+
+              responsive: {
+                rules: [{
+                  condition: {
+                    maxWidth: 500
+                  },
+                  chartOptions: {
+                    legend: {
+                      layout: 'horizontal',
+                      align: 'center',
+                      verticalAlign: 'bottom'
+                    }
+                  }
+                }]
+              }
+            });
+
+            document.getElementById('indicator').style.display = 'none';
+          }
+        }
+        x.send(null);
+      }
+    }
+  </script>
+</body>
+
+</html>
