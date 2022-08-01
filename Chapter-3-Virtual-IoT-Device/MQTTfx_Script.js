@@ -26,7 +26,7 @@ function sendPayload() {
   
   var IoT_Payload = { 
       "temperature" :  temp, 
-      "humidity"    :  humid 
+      "humidity"    :  humid,
       "timestamps"  :  ts
     }
 
