@@ -15,9 +15,9 @@ dataset_url = client.get_dataset_content(datasetName = dataset)['entries'][0]['d
 # start working with the data
 
 df = pd.read_csv(dataset_url)
-df.ServersideTimestamp = pd.to_datetime(pd.to_numeric(df.ServersideTimestamp), unit='ms')
-df.set_index(df.ServersideTimestamp, inplace=True)
-#df.sort_values('ServersideTimestamp', inplace=True)
+df.serversidetimestamp = pd.to_datetime(pd.to_numeric(df.serversidetimestamp), unit='ms')
+df.set_index(df.serversidetimestamp, inplace=True)
+#df.sort_values('serversidetimestamp', inplace=True)
 
 fig, ax = plt.subplots()
 df.temperature.plot(legend=True)
