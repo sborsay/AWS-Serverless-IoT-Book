@@ -1,1 +1,1 @@
-SELECT * FROM <Your-Prefix-Name>_datastore order by ServersideTimestamp
+SELECT * FROM <Your-Prefix-Name>_datastore order by serversidetimestamp
