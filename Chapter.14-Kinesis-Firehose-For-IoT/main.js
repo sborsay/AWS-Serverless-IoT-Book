@@ -2,7 +2,7 @@ var timestamps = [];
 var humidity = [];
 var temperature = [];
 
-// Start by extracting folder2/ url from s3 bucket
+// Start by extracting thesubfolder/ url from s3 bucket
 $.ajax({
     type     : "GET",
     url      : "https://<Your-S3-Bucket-Name-Here>/",
