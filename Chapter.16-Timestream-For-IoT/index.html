@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>Dashboard</h1>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title"><strong>ESP32_Charlie3 Chart</strong></h3>
+      </div>
+      <div class="panel-body">
+        <div id="container"></div>
+      </div>
+    </div>
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title"><strong>Esp32_Alpha1 Chart</strong></h3>
+      </div>
+      <div class="panel-body">
+        <div id="container1"></div>
+      </div>
+    </div>
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title"><strong>ESP32_Bravo2 Chart</strong></h3>
+      </div>
+      <div class="panel-body">
+        <div id="container2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script>
+
+    window.onload = function () {
+      var x = new XMLHttpRequest();
+      x.open("GET", "https://<YOUR-FUNCTION-URL-HERE>", true);
+      x.onreadystatechange = function () {
+        if (x.readyState == 4 && x.status == 200) {
+          let resData = JSON.parse(x.responseText);
+          let devicesArr = {
+            'ESP32_Charlie3': { hum: [], temp: [], humtime: [], temptime: [] },
+            'ESP32_Alpha1': { hum: [], temp: [], humtime: [], temptime: [] },
+            'ESP32_Bravo2': { hum: [], temp: [], humtime: [], temptime: [] }
+          };
+          try {
+            let { Rows } = resData;
+            for (let key in devicesArr) {
+              Rows.forEach(item => {
+                let deviceKey = item.Data[0].ScalarValue;
+                console.log('deviceKey', deviceKey);
+                console.log('key', key);
+
+                if (deviceKey.toLowerCase() == key.toLowerCase()) {
+                  let dateTime = new Date(item.Data[2].ScalarValue).toLocaleDateString() + new Date(item.Data[2].ScalarValue).toLocaleTimeString();
+                  if (item.Data[1].ScalarValue == 'humidity') {
+                    devicesArr[key]['hum'].push(Number(item.Data[3].ScalarValue))
+                    devicesArr[key]['humtime'].push(dateTime);
+                  }
+                   if (item.Data[1].ScalarValue == 'temperature') {
+                    devicesArr[key]['temp'].push(Number(item.Data[3].ScalarValue))
+                    devicesArr[key]['temptime'].push(dateTime);
+                  }
+                }
+              });
+            }
+            console.log('devicesArr', devicesArr);
+
+            const ESP32_Charlie3ChartData = devicesArr['ESP32_Charlie3'];
+            const xAxisData = ESP32_Charlie3ChartData['temptime'];
+            const inhumidArr = ESP32_Charlie3ChartData['hum'];
+            const intempArr = ESP32_Charlie3ChartData['temp'];
+            Highcharts.chart('container', {
+              title: {
+                text: 'ESP32_Charlie3 Device'
+              },
+              tooltip: {
+                useHTML: true,
+                style: {
+                  padding: 0,
+                  pointerEvents: 'auto'
+                },
+                formatter: function () {
+                  return `
+                    Time: ${this.x} <br>${this.series.name}: ${this.y}`
+                }
+              },
+              yAxis: {
+                title: {
+                  text: 'Value'
+                }
+              },
+              xAxis: {
+                categories: xAxisData
+              },
+              legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+              },
+              plotOptions: {
+                series: {
+                  label: {
+                    connectorAllowed: false
+                  }
+                }
+              },
+              series: [{
+                name: 'Humdity',
+                data: inhumidArr
+              }, {
+                name: 'Temperature',
+                data: intempArr
+              }]
+            });
+
+            const Esp32_Alpha1ChartData = devicesArr['ESP32_Alpha1'];
+            const xAxisData1 = Esp32_Alpha1ChartData['temptime'];
+            const inhumidArr1 = Esp32_Alpha1ChartData['hum'];
+            const intempArr1 = Esp32_Alpha1ChartData['temp'];
+            Highcharts.chart('container1', {
+              title: {
+                text: 'ESP32_Alpha1 Device'
+              },
+              tooltip: {
+                useHTML: true,
+                style: {
+                  padding: 0,
+                  pointerEvents: 'auto'
+                },
+                formatter: function () {
+                  return `
+                    Time: ${this.x} <br>${this.series.name}: ${this.y}`
+                }
+              },
+              yAxis: {
+                title: {
+                  text: 'Value'
+                }
+              },
+              xAxis: {
+                categories: xAxisData1
+              },
+              legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+              },
+              plotOptions: {
+                series: {
+                  label: {
+                    connectorAllowed: false
+                  }
+                }
+              },
+              series: [{
+                name: 'Humdity',
+                data: inhumidArr1
+              }, {
+                name: 'Temperature',
+                data: intempArr1
+              }]
+            });
+
+            const ESP_Bravo2ChartData = devicesArr['ESP32_Bravo2'];
+            const xAxisData2 = ESP_Bravo2ChartData['temptime'];
+            const inhumidArr2 = ESP_Bravo2ChartData['hum'];
+            const intempArr2 = ESP_Bravo2ChartData['temp'];
+            Highcharts.chart('container2', {
+              title: {
+                text: 'ESP32_Bravo2 Device'
+              },
+              tooltip: {
+                useHTML: true,
+                style: {
+                  padding: 0,
+                  pointerEvents: 'auto'
+                },
+                formatter: function () {
+                  return `
+                    Time: ${this.x} <br>${this.series.name}: ${this.y}`
+                }
+              },
+              yAxis: {
+                title: {
+                  text: 'Value'
+                }
+              },
+              xAxis: {
+                categories: xAxisData2
+              },
+              legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+              },
+              plotOptions: {
+                series: {
+                  label: {
+                    connectorAllowed: false
+                  }
+                }
+              },
+              series: [{
+                name: 'Humdity',
+                data: inhumidArr2
+              }, {
+                name: 'Temperature',
+                data: intempArr2
+              }]
+            });
+
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      }
+      x.onerror = function () {
+      }
+      x.send(null);
+    }
+  </script>
+</body>
+
+</html>
