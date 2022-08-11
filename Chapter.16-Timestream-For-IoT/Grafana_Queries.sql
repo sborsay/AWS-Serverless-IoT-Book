@@ -1,6 +1,5 @@
 Query for combined graph (single entry)
 
-
 FROM $__database.$__table WHERE 'humidity' = "measure_name" OR 'temperature' = "measure_name" 
 
 Use the query below to make two separate lines on your graph.  You will need to make a Query "A" and a Query "B" as two different entries.  Also make sure that the names and the data types match your data table (i.e., bigint or double).
