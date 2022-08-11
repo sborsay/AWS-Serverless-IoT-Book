@@ -1,6 +1,4 @@
- 
-	  
-const socket = new WebSocket('wss://jwqgqcmts5.execute-api.us-east-1.amazonaws.com/production')
+const socket = new WebSocket('wss://<Your-Endpoint>.execute-api.us-east-1.amazonaws.com/production')
 
 socket.addEventListener('open', event => {
   console.log('WebSocket is connected, now check for your new Connection ID in Cloudwatch and the Parameter Store on AWS')
@@ -185,5 +183,3 @@ Plotly.plot('myDiv5', dataa2, layout5);
   //end graph section
 
 }) //end websocket function
-
-
