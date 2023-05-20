@@ -1,0 +1,12 @@
+modify the main.js file to see the lines in the graph.  This is due to change in how AWS saves JSON in S3 in 2023
+
+
+line 16 had: url = url.trim()+"+"
+and now: url = url.trim()
+
+---
+
+Regarding main.js I see other differences between what you have in the book and what is now in github:
+
+in the book: if(url.replace("iot/test/", "+") != "")//Your key folder name
+in github (line 21): if(url.replace("iot/test/", "") != "")//Your key folder name
