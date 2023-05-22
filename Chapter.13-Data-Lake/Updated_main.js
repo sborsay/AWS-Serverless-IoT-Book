@@ -14,10 +14,10 @@ $.ajax({
             url = keys[i].childNodes[0].nodeValue
             url = url.trim()
 
-            pos = url.search("republish/");
+            pos = url.search("iot/test/");
             if(pos > -1) {
            // Detect folder/partition with json file
-              if(url.replace("republish/", "") != "")//Your key folder name
+              if(url.replace("iot/test/", "") != "")//Your key folder name
                   parseJson(url)
            }
             
