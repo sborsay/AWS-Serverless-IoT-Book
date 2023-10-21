@@ -1,0 +1,71 @@
+//More info found at https://docs.aws.amazon.com/iot/latest/developerguide/http.html
+
+//aws iot describe-endpoint --endpoint-type iot:Data-ATS
+
+HTTPs with certs to IoT Core (MQTT test client: Subscribe)
+
+The CA certificate file (Amazon-root-CA-1.pem in this example).
+The client's certificate file (client.pem.crt in this example).
+The client's private key file (private.pem.key in this example).
+Create the curl command line, replacing the <INSERT> values for those of your account, endpoint, and system.
+
+//check that your current AWS IoT Core Region in console matches certificate creation region
+
+//change the name of your from specific to generic:
+a04r7f8e71-certificate.pem.crt  --> client.pem.crt
+a04r7f8ee71-private.pem.key --> private.pem.key
+
+//insert your own AWS IoT endpoint:  aws iot describe-endpoint
+//insert your topic name (here I called the topic: "outTopic")
+
+C:\Program Files>where curl.exe
+C:\Program Files\Git\mingw64\bin\curl.exe
+C:\Windows\System32\curl.exe
+//use mingw64 version in same directory as curl.exe, do not use Windows defualt system32 version- it won't work
+
+//try this first from the prompt in same directory as your Linux based curl.exe in windows, with certificates in the sam directory
+
+curl --tlsv1.2 --cacert Amazon-root-CA-1.pem --cert client.pem.crt --key private.pem.key --request POST --data "{\"Temperature\": 77, \"Humidity\": 88, \"Time\": 12349876,\"Device_ID\": \"device_4\"}" "https://<INSERT-YOUR-IOT-DATA-ENDPOINT-HERE>:8443/topics/outTopic?qos=1"
+
+//alternatives with line continuation if the above command fails (often windows reports failed to receive handshake SSL/TLS)
+
+//below curl comands are for Windows, certificates in same directory as where you dispatch cURL commands
+//works from /Git/mingw64/bin>  directory in Windows using "^" for line continuation
+//works from Git Bash in Windows but must use "\" not "^" for line continuation
+
+curl --tlsv1.2 ^
+    --cacert Amazon-root-CA-1.pem ^
+    --cert certificate.pem.crt ^
+    --key private.pem.key ^
+    --request POST ^
+    --data "{\"Temperature\": 77, \"Humidity\": 88, \"Time\": 12349876,\"Device_ID\": \"device_4\"}" ^
+    "https://<INSERT-YOUR-IOT-DATA-ENDPOINT-HERE>:8443/topics/outTopic?qos=1"
+
+//this is for Linux, certificates in same directory as where you dispatch cURL commands
+curl --tlsv1.2 \
+    --cacert Amazon-root-CA-1.pem \
+    --cert certificate.pem.crt \
+    --key private.pem.key \
+    --request POST \
+    --data "{\"Temperature\": 77, \"Humidity\": 88, \"Time\": 12349876,\"Device_ID\": \"device_4\"}" \
+    "https://<INSERT-YOUR-IOT-DATA-ENDPOINT-HERE>:8443/topics/outTopic?qos=1"
+    
+Troubleshooting:
+1.  "Use cURL commands in same dirctory as curl.exe or you may receive error: 
+ _curl: (35) schannel: failed to receive handshake, SSL/TLS connection failed_"
+ Solution:
+//Insert all three of your enabled and activated device certificates into the same directory as Linux based cURL in Windows
+// example... works from /.../Git/mingw64/bin>  in Windows
+
+2.  "curl: (60) SSL certificate problem: unable to get local issuer certificate" or,
+curl: (35) schannel: next InitializeSecurityContext failed: CRYPT_E_REVOKED (0x80092010) - The certificate is revoked.
+Solution:  use the -k flag
+curl --tlsv1.2 -k --cacert Amazon-root-CA-1.pem --cert client.pem.crt --key private.pem.key --request POST --data "{\"Temperature\": 77, \"Humidity\": 88, \"Time\": 12349876,\"Device_ID\": \"device_4\"}" "https://a32qxxxkugfxxx-ats.iot.us-east-1.amazonaws.com:8443/topics/outTopic?qos=1"
+
+3.  curl: (58)  unable to set private key file: 'private.pem.key' type PEM
+Solution:  Rename private.pem.key --> my.private.key
+
+curl --tlsv1.2 -k --cacert Amazon-root-CA-1.pem --cert client.pem.crt --key my.private.key --request POST --data "{\"Temperature\": 77, \"Humidity\": 88, \"Time\": 12349876,\"Device_ID\": \"device_4\"}" "https://a32qxxxkugfxxx-ats.iot.us-east-1.amazonaws.com:8443/topics/outTopic?qos=1"
+
+//Free online  tool to help add backslashs to normal JSON (Escaping): https://onlinejsontools.com/escape-json
+//more info at https://docs.aws.amazon.com/iot/latest/developerguide/http.html
