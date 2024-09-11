@@ -1,7 +1,4 @@
-#AWS MQTT client example for esp32, this sketch is a combination of various sources:
-#https://awsiot.wordpress.com/2019/01/10/connect-8266-to-aws-mqtt-using-miropython/
-#https://forum.micropython.org/viewtopic.php?t=5166
-#Original code added by Stephen Borsay for Udemy Course and AWS IoT Book
+#AWS MQTT client example for esp32
 
 from umqtt.robust import MQTTClient
 import time
@@ -14,7 +11,7 @@ pin = machine.Pin(2)  #blinking is optional, check your LED pin
 CERT_FILE = "/certificate.pem.crt"  
 KEY_FILE = "/private.pem.key"
 
-MQTT_CLIENT_ID = "CurtesyFlush88"
+MQTT_CLIENT_ID = "myUniqueID"
 MQTT_PORT = 8883 #MQTT secured
 
 PUB_TOPIC = "iot/outTopic" #coming out of device
@@ -22,7 +19,7 @@ SUB_TOPIC = "iot/inTopic"  #coming into device
 
 #Your AWS IoT Endpoint found at IoT Core-->Settings
 #Change the following three settings
-MQTT_HOST = "<YOUR-AWS-IOT-ENDPOINT>" #Your AWS IoT endpoint
+MQTT_HOST = "<YOUR-AWS-ATS-IOT-ENDPOINT>" #YEx: dhRtqf1kr1mft-ats.iot.us-east-1.amazonaws.com 
 WIFI_SSID = "<Your-WiFi-Network-Name-Here>"
 WIFI_PW = "<Your-WiFi-Password>"
 
@@ -87,8 +84,8 @@ try:
     cloud_connect()
     while True: #loop forever
             pin.value(1)
-            pending_message = MQTT_CLIENT.check_msg()  # check for new sub payload incoming
-            if pending_message != 'None':  #check if we have a message 
+            pending_message = MQTT_CLIENT.check_msg()  # check for new subscribed payload incoming
+            if pending_message != 'None':  #check if message is pending
                 temp =  random.randint(0, 130)
                 humid = random.randint(0, 100)
                 deviceTime = time.time()
