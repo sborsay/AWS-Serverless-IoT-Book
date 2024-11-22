@@ -3,6 +3,7 @@
 #https://github.com/digidotcom/xbee-micropython/blob/master/samples/cellular/aws/
 #https://forum.micropython.org/viewtopic.php?t=5166
 #Original code added by Stephen Borsay for Udemy Course
+#Rename this as "main.py"
 
 from umqtt.robust import MQTTClient
 import ssl # new update for firmware starting 6/24
